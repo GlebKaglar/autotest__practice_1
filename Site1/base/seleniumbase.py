@@ -1,3 +1,4 @@
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -32,6 +33,13 @@ class SeleniumBase:
     # Ждем и возвращаем WebElement, если он присутсвует в DOM
     def is_present(self, find_by: str, locator: str, locator_name: str = None) -> WebElement:
         return self.__wait.until(EC.presence_of_element_located((self.__get_selenium_by(find_by), locator)), locator_name)
+
+    def is_element_present(self, how, what):
+        try:
+            self.driver.find_element(how, what)
+        except NoSuchElementException:
+            return False
+        return True
 
     # Ждем, пока элемент не исчезнет
     def is_not_present(self, find_by: str, locator: str, locator_name: str = None) -> WebElement:
