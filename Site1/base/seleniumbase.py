@@ -8,7 +8,7 @@ from typing import List
 class SeleniumBase:
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 15, 0.3)
+        self.__wait = WebDriverWait(driver, 15, 0.3)
 
     def __get_selenium_by(self, find_by: str) -> dict:
         # Возвращает словарь
@@ -27,20 +27,29 @@ class SeleniumBase:
 
     # Ждем и возвращаем WebElement, когда элемент будет виден
     def is_visible(self, find_by: str, locator: str, locator_name: str = None) -> WebElement:
-        return self.wait.until(EC.visibility_of_element_located((self.__get_selenium_by(find_by), locator)), locator_name)
+        return self.__wait.until(EC.visibility_of_element_located((self.__get_selenium_by(find_by), locator)), locator_name)
 
     # Ждем и возвращаем WebElement, если он присутсвует в DOM
     def is_present(self, find_by: str, locator: str, locator_name: str = None) -> WebElement:
-        return self.wait.until(EC.presence_of_element_located((self.__get_selenium_by(find_by), locator)), locator_name)
+        return self.__wait.until(EC.presence_of_element_located((self.__get_selenium_by(find_by), locator)), locator_name)
 
     # Ждем, пока элемент не исчезнет
     def is_not_present(self, find_by: str, locator: str, locator_name: str = None) -> WebElement:
-        return self.wait.until(EC.invisibility_of_element_located((self.__get_selenium_by(find_by), locator)), locator_name)
+        return self.__wait.until(EC.invisibility_of_element_located((self.__get_selenium_by(find_by), locator)), locator_name)
 
     # Ждем и возвращаем WebElement (список), когда элементы будут видны
     def are_visible(self, find_by: str, locator: str, locator_name: str = None) -> List[WebElement]:
-        return self.wait.until(EC.visibility_of_all_elements_located((self.__get_selenium_by(find_by), locator)), locator_name)
+        return self.__wait.until(EC.visibility_of_all_elements_located((self.__get_selenium_by(find_by), locator)), locator_name)
 
     # Ждем и возвращаем WebElement (список), если он присутсвуют в DOM
     def are_present(self, find_by: str, locator: str, locator_name: str = None) -> List[WebElement]:
-        return self.wait.until(EC.presence_of_all_elements_located((self.__get_selenium_by(find_by), locator)), locator_name)
+        return self.__wait.until(EC.presence_of_all_elements_located((self.__get_selenium_by(find_by), locator)), locator_name)
+
+    # Получаем список с текстом WebElement
+    def get_text_from_webelements(self, elements: List[WebElement]) -> List[str]:
+        return [element.text for element in elements]
+
+     # Получаем WebElement по тексту в нем
+    def get_element_by_text(self, elements: List[WebElement], name: str) -> WebElement:
+        name = name.lower()
+        return [element for element in elements if element.text.lower() == name][0]

@@ -28,6 +28,7 @@ def setup(request, get_webdriver):
     if request.cls is not None:  # Являются ли тесты в классе (если да)
         request.cls.driver = driver  # Если класс, то даем драйвер
     driver.get(url)
+    # driver.delete_all_cookies()  # если сайт будет блокировать доступ
     yield driver
     #  driver.close() # - закрытие окна
     driver.quit()
